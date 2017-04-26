@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
 public class cpuOverhead extends Service {
     //PowerManager class gives you control of the power state of the device.
     PowerManager pm = null;
-    PowerManager.WakeLock w1 = null;
+    PowerManager.WakeLock w1 = null;//
     ThreadCounterOverhead tco = null;
 
 
