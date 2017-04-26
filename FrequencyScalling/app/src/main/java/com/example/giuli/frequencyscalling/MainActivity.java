@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
         }
         frequency.setText(allFrequency);
 
-        for(int cpu = 0; cpu<=8;cpu++){
-            String currentUsage = String.valueOf((getUsage(cpu)));
+
+            String currentUsage = String.valueOf(getUsage(0));//cpu0
             //usage = usage + "utilizzazione cpu " + cpu + "=" + currentUsage;
             if(usage.isEmpty()){
                 usage = "0";
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             else {
                 usage = usage.valueOf(Integer.parseInt(usage) + Integer.parseInt(currentUsage));
             }
-        }
+
 
         totalUsage.setText(usage);
 
