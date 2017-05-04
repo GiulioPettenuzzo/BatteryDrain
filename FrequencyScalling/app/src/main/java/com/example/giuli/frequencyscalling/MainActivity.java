@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 if(!value1.isEmpty()){
                     time[0] = Integer.parseInt(value1);
                     intent.putExtra("tempo", time[0]);
-                    batteryIntent.putExtra("tempo",time[0]);
+                    batteryIntent.putExtra("tempo_battery",time[0]);
                 }
             }
         });
@@ -94,10 +94,10 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+             //  startService(batteryIntent);
                 startService(intent);
-                startService(batteryIntent);
-            }
-        });
+}       });
 //ok
 
 

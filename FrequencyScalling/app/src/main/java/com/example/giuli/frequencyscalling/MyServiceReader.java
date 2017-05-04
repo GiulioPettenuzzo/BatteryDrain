@@ -30,6 +30,8 @@ public class MyServiceReader extends Service {
     MyThreadReader mtr = null;
     int timeOut = 0;
 
+    public static File outputFile = null;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -37,11 +39,15 @@ public class MyServiceReader extends Service {
     }
 
     public int onStartCommand(Intent i,int flags,int strId){
-        int tempo = i.getExtras().getInt("tempo");
+        int tempo = i.getExtras().getInt("tempo_battery");
         mtr = new MyServiceReader.MyThreadReader(tempo);
         mtr.start();
 
         return super.onStartCommand(i,flags,strId);
+    }
+
+    public File getOutputFile(){
+        return outputFile;
     }
 
     /**
@@ -50,14 +56,14 @@ public class MyServiceReader extends Service {
 
     public final class MyThreadReader extends Thread {
 
-        String currentPath = "/sys/devices/soc.0/78b8000.i2c/i2c-4/4-006b/power_supply/battery/current_now";
-        String voltagePath = "/sys/devices/soc.0/78b8000.i2c/i2c-4/4-006b/power_supply/battery/voltage_now";
+        String currentPath = "/sys/devices/platform/mt6329-battery/FG_Battery_CurrentConsumption";
+        String voltagePath = "/sys/devices/platform/mt6329-battery/power_supply/battery/InstatVolt";
         String current;
         String outputCurrent = "";
         String voltage;
         String outputVoltage = "";
 
-        File outputFile = null;
+
 
         public MyThreadReader(int time){
             outputFile = new File(getApplicationContext().getFilesDir(),"OverheadBatteryOutput.txt");
@@ -68,7 +74,7 @@ public class MyServiceReader extends Service {
             long startTime = System.currentTimeMillis();
             long endTime = startTime;
             //int mSec = 10000; //10 secondi
-
+            int i = 0;
             try {
 
                 while (endTime - startTime < timeOut) {
@@ -76,6 +82,7 @@ public class MyServiceReader extends Service {
                     FileReader currentFile = new FileReader(currentPath);
                     BufferedReader currentBuffer = new BufferedReader(currentFile);
                     current = currentBuffer.readLine();
+
 
                     currentBuffer.close();
                     currentFile.close();
@@ -91,7 +98,8 @@ public class MyServiceReader extends Service {
                     outputVoltage = outputVoltage +voltage+ "microVolt"+"\r";
 
                     writeOutputToFile(outputCurrent,outputVoltage);
-
+                    Log.i("battery", String.valueOf(i));
+                    i++;
                     Thread.sleep(3000);
                     endTime = System.currentTimeMillis();
 
@@ -107,7 +115,8 @@ public class MyServiceReader extends Service {
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
+            Intent intent = new Intent(getApplicationContext(),com.example.giuli.frequencyscalling.cpuOverheadActivity.class);
+            intent.putExtra(getStringFromOutputFile(),"battery_result");
         }
         public String getOutputCurrent() {
             outputCurrent=outputCurrent;
@@ -143,16 +152,14 @@ public class MyServiceReader extends Service {
             String totResult = "";
             try {
                 currentFile = new FileReader(outputFile);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            BufferedReader fileBuffer = new BufferedReader(currentFile);
-            try {
-                while(!fileBuffer.readLine().isEmpty()){ //finchè trova nuove righe
+
+                BufferedReader fileBuffer = new BufferedReader(currentFile);
+
+                while (!fileBuffer.readLine().isEmpty()) { //finchè trova nuove righe
                     result = fileBuffer.readLine();
                     totResult = totResult + result;
                 }
-            } catch (IOException e) {
+            }catch (IOException e) {
                 e.printStackTrace();
             }
             return totResult;

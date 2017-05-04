@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,7 +28,14 @@ public class cpuOverhead extends Service {
     PowerManager pm = null;
     PowerManager.WakeLock w1 = null;//
     ThreadCounterOverhead tco = null;
-
+    //MyServiceReader.MyThreadReader msr = null;
+    String currentPath = "/sys/devices/platform/mt6329-battery/FG_Battery_CurrentConsumption";
+    String voltagePath = "/sys/devices/platform/mt6329-battery/power_supply/battery/InstatVolt";
+    String current;
+    String outputCurrent = "";
+    String voltage;
+    String outputVoltage = "";
+    String totBatteryConsumption;
 
     @Nullable
     @Override
@@ -45,6 +53,7 @@ public class cpuOverhead extends Service {
         int usage = i.getExtras().getInt("usage");
         int tempo = i.getExtras().getInt("tempo");
         tco = new ThreadCounterOverhead(usage,tempo);
+
         tco.start();
 
         return super.onStartCommand(i,flags,strId);
@@ -171,6 +180,7 @@ public class cpuOverhead extends Service {
             long execTime = timeUnit*usage;
             long sleepTime = timeUnit*notUsage;
             int dummy = 0;
+            String currentBatteryValues = "";
 
 
             try{
@@ -178,18 +188,23 @@ public class cpuOverhead extends Service {
                 long initialExTime = getTotalUsage(listLine);
                 long initialSleepTime = getTotalSleep(listLine);
 
+                int i=0,j=0;
                 while(current-start<time){
                     long intStart = System.currentTimeMillis();
                     long intCurr = intStart;
 
                     //qui cerco i valori di corrente e li scrivo su file
-
+                   // totBatteryConsumption = totBatteryConsumption + " 1 = " + getCurrentAndVoltage();
                     if(execTime != 0){
                         while(intCurr-intStart<execTime){
                             dummy++;
                             intCurr=System.currentTimeMillis();
+                            /*if(dummy%1000000000==0){
+                                totBatteryConsumption = totBatteryConsumption + getCurrentAndVoltage();
+                            }*/
                         }
                     }
+                   // totBatteryConsumption = totBatteryConsumption + " 2 = "  + getCurrentAndVoltage();
                     if(sleepTime!=0){
                         try{
                             Thread.sleep(sleepTime);
@@ -198,7 +213,10 @@ public class cpuOverhead extends Service {
                             e.printStackTrace();
                         }
                     }
+                    totBatteryConsumption = totBatteryConsumption + getCurrentAndVoltage();
                     current = System.currentTimeMillis();
+                    Log.i("utilizzazione grande", String.valueOf(j));
+                    j++;
                 }
                 ArrayList<String> listLine2 = readCpusString();
                 long finalExTime = getTotalUsage(listLine2);
@@ -217,13 +235,38 @@ public class cpuOverhead extends Service {
             Intent result = new Intent(getBaseContext(),cpuOverheadActivity.class);
             result.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             result.putExtra("result",resultInString);
+            result.putExtra("result_battery",totBatteryConsumption);
             startActivity(result);
 
         }
 
-        public void writeCurrentToFile(){
+        public String getCurrentAndVoltage(){
+            String output = "";
+            try {
+                FileReader currentFile = new FileReader(currentPath);
+                BufferedReader currentBuffer = new BufferedReader(currentFile);
+                current = currentBuffer.readLine();
 
+
+                currentBuffer.close();
+                currentFile.close();
+                //read the voltage
+                FileReader voltageFile = new FileReader(voltagePath);
+                BufferedReader voltageBuffer = new BufferedReader(voltageFile);
+                voltage = voltageBuffer.readLine();
+
+                voltageBuffer.close();
+                voltageFile.close();
+
+                outputCurrent = outputCurrent + current + "microAmpere" + "\r";
+                outputVoltage = outputVoltage + voltage + "microVolt" + "\r";
+                output = outputCurrent+outputVoltage;
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+            return output;
         }
+
 
 
 

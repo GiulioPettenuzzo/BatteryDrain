@@ -21,6 +21,8 @@
 
         <service android:name=".cpuOverhead">
         </service>
+        <service android:name=".MyServiceReader">
+        </service>
 
         <activity android:name=".cpuOverheadActivity"/>
         <activity android:name=".FrequencyScaling">
