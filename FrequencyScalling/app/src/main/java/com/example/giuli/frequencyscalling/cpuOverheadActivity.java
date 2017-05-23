@@ -1,10 +1,9 @@
 package com.example.giuli.frequencyscalling;
 
         import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
-
+        import android.os.Bundle;
+        import android.support.v7.app.AppCompatActivity;
+        import android.widget.TextView;
         import java.io.BufferedReader;
         import java.io.File;
         import java.io.FileNotFoundException;
@@ -15,6 +14,7 @@ public class cpuOverheadActivity extends AppCompatActivity {
 
     TextView result_usage;
     TextView result_battery;
+    TextView frequency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +23,15 @@ public class cpuOverheadActivity extends AppCompatActivity {
 
         result_usage = (TextView) findViewById(R.id.result_usage);
         result_battery = (TextView) findViewById(R.id.result_battery);
+        frequency = (TextView) findViewById(R.id.frequency);
 
         Intent i = getIntent();
         String value = i.getStringExtra("result");
         String totValues = i.getStringExtra("result_battery");
         result_usage.setText(value);
 
+        FrequencyScaling f = new FrequencyScaling();
+        frequency.setText(f.getMinFreq());
        /* Intent j = getIntent();
         String battery_result = j.getStringExtra("battery_result");*/
 

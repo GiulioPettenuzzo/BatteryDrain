@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     TextView totalUsage;
     EditText timeToLive;
     EditText usageToLive;
+    EditText minFrequency;
     Button button;
 
     String allFrequency = "";
@@ -40,30 +41,31 @@ public class MainActivity extends AppCompatActivity {
         totalUsage = (TextView)findViewById(R.id.usage);
         timeToLive = (EditText)findViewById(R.id.time);
         usageToLive = (EditText)findViewById(R.id.usageToImpose);
+        minFrequency = (EditText)findViewById(R.id.minFrequency);
         button = (Button)findViewById(R.id.button);
 
 
-        for(int cpu = 0;cpu<=7;cpu++){
+        for(int cpu = 0;cpu<=1;cpu++){
             allFrequency =  allFrequency+" frequenza cpu" + cpu + " = "  + getFrequency(cpu);
         }
         frequency.setText(allFrequency);
 
-
-            String currentUsage = String.valueOf(getUsage(0));//cpu0
-            //usage = usage + "utilizzazione cpu " + cpu + "=" + currentUsage;
-            if(usage.isEmpty()){
+        for(int i = 0;i<=1;i++) {
+            String currentUsage = String.valueOf(getUsage(i));
+        //    usage = usage + "utilizzazione cpu " + i + "=" + currentUsage;
+            if (usage.isEmpty()) {
                 usage = "0";
-            }
-            else {
+            } else {
                 usage = usage.valueOf(Integer.parseInt(usage) + Integer.parseInt(currentUsage));
             }
-
+        }
 
         totalUsage.setText(usage);
 
 
         final int[] usageInteger = new int[1];
         final int[] time = {0};
+        final int[] frequency = new int[1];
         final Intent intent = new Intent(this,com.example.giuli.frequencyscalling.cpuOverhead.class);
         final Intent batteryIntent = new Intent(this,com.example.giuli.frequencyscalling.MyServiceReader.class);
 
@@ -89,6 +91,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        minFrequency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String value = minFrequency.getText().toString();
+                if(!value.isEmpty()){
+                    frequency[0] = Integer.parseInt(value);
+                    intent.putExtra("min_frequency",frequency[0]);
+                }
+            }
+        });
        // startActivity(intent);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -98,8 +110,6 @@ public class MainActivity extends AppCompatActivity {
              //  startService(batteryIntent);
                 startService(intent);
 }       });
-//ok
-
 
     }
 

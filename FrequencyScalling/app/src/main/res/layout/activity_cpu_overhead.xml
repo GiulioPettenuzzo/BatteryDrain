@@ -1,31 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_cpu_overhead"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.giuli.frequencyscalling.cpuOverheadActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="15dp"
-        android:id="@+id/result_usage"/>
+    <ScrollView
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
 
-    <TextView
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/result_usage"
-        android:id="@+id/result_battery"/>
-</RelativeLayout>
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="495dp"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
+
+            <TextView
+                android:id="@+id/frequency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="0dp"
+                android:text="frequency"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.069"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintTop_creator="1" />
+
+            <TextView
+                android:id="@+id/result_battery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="result battery"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.046"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/result_usage"
+                app:layout_constraintVertical_bias="0.0"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintTop_creator="1" />
+
+            <TextView
+                android:id="@+id/result_usage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:text="result usage"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.057"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frequency"
+                app:layout_constraintVertical_bias="0.0" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

@@ -38,36 +38,6 @@
         android:layout_alignStart="@+id/max_freq_CPU0"
         android:id="@+id/min_freq_CPU0"/>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:layout_below="@+id/min_freq_CPU0"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/max_freq_CPU3"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:layout_below="@+id/max_freq_CPU3"
-        android:layout_alignLeft="@+id/max_freq_CPU3"
-        android:layout_alignStart="@+id/max_freq_CPU3"
-        android:id="@+id/min_freq_CPU3"/>
-
-    <TextView
-        android:text="max freq CPU_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView4"
-        android:layout_above="@+id/min_freq_CPU3"
-        android:layout_toEndOf="@+id/current_frequency"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -82,18 +52,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView3"
-        android:layout_above="@+id/max_freq_CPU3"
+        android:layout_alignBottom="@+id/min_freq_CPU0"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-
-    <TextView
-        android:text="min freq CPU_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView5"
-        android:layout_alignBottom="@+id/min_freq_CPU3"
-        android:layout_alignRight="@+id/textView2"
-        android:layout_alignEnd="@+id/textView2"/>
+        android:layout_alignParentStart="true" />
 
     <Button
         android:text="impose frequency"
@@ -101,8 +62,54 @@
         android:layout_height="wrap_content"
         android:id="@+id/impose_frequency_button"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignLeft="@+id/textView5"
-        android:layout_alignStart="@+id/textView5"/>
+        android:layout_toRightOf="@+id/textView3"
+        android:layout_toEndOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView3"
+        android:layout_marginTop="95dp"
+        android:text="max freq =" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="46dp"
+        android:text="min freq =" />
+
+    <TextView
+        android:id="@+id/read_max_freq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView"
+        android:layout_toEndOf="@+id/textView3"
+        android:layout_toRightOf="@+id/textView3"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/read_min_freq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView4"
+        android:layout_toEndOf="@+id/textView2"
+        android:layout_toRightOf="@+id/textView2"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/refresh_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/impose_frequency_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="46dp"
+        android:text="refresh" />
+
 </RelativeLayout>

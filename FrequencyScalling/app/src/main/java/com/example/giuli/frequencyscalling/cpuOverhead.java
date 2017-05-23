@@ -10,6 +10,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -29,8 +30,8 @@ public class cpuOverhead extends Service {
     PowerManager.WakeLock w1 = null;//
     ThreadCounterOverhead tco = null;
     //MyServiceReader.MyThreadReader msr = null;
-    String currentPath = "/sys/devices/platform/mt6329-battery/FG_Battery_CurrentConsumption";
-    String voltagePath = "/sys/devices/platform/mt6329-battery/power_supply/battery/InstatVolt";
+    String currentPath = "/sys/devices/platform/ab8500-i2c.0/ab8500-fg.0/power_supply/ab8500_fg/current_now";
+    String voltagePath = "/sys/devices/platform/ab8500-i2c.0/ab8500-fg.0/power_supply/ab8500_fg/voltage_now";
     String current;
     String outputCurrent = "";
     String voltage;
@@ -52,8 +53,12 @@ public class cpuOverhead extends Service {
         w1.acquire();
         int usage = i.getExtras().getInt("usage");
         int tempo = i.getExtras().getInt("tempo");
+        int minFrequency = i.getExtras().getInt("min_frequency");
+        // prova a farlo in un thread separato e farlo partire qui
+        CPUFrequencyScaling frequencyScaling = new CPUFrequencyScaling(minFrequency,10,tempo);
         tco = new ThreadCounterOverhead(usage,tempo);
 
+        frequencyScaling.start();
         tco.start();
 
         return super.onStartCommand(i,flags,strId);
@@ -260,23 +265,119 @@ public class cpuOverhead extends Service {
 
                 outputCurrent = outputCurrent + current + "microAmpere" + "\r";
                 outputVoltage = outputVoltage + voltage + "microVolt" + "\r";
-                output = outputCurrent+outputVoltage;
+                output = outputCurrent;//+outputVoltage;
             }catch(IOException e){
                 e.printStackTrace();
             }
             return output;
         }
+    }
+    private final class CPUFrequencyScaling extends Thread{
+
+        int minFreq;
+        int maxFreq;
+        int time;
 
 
+        String maxFreqPathCPU0 = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq";
+        String minFreqPathCPU0 = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq";
+        String currFreq = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq";
 
 
+        public CPUFrequencyScaling(int minFreq,int maxFreq,int t){
+            minFreq = minFreq*100000;
+            maxFreq = maxFreq*100000;
+            this.minFreq = minFreq;
+            this.maxFreq = maxFreq;
+            time = t*1000;
+        }
+        public String getFrequency(){
+            String frequency="";
+            try {
+                FileReader curFreqFile = new FileReader(currFreq);
+                BufferedReader buffer = new BufferedReader(curFreqFile);
+                frequency = buffer.readLine();
+
+                buffer.close();
+                curFreqFile.close();
+            }
+            catch(FileNotFoundException e){
+                Log.e("getFrequency: ","FileNotFoundException");
+            }
+            catch(IOException e){
+                Log.e("getFrequency: ","IOException");
+            }
+            return frequency;
+        }
+        public String getMaxFreq(){
+            String maxFreq = "";
+
+            try{
+                FileReader maxReaderFile = new FileReader(maxFreqPathCPU0);
+                BufferedReader buffer = new BufferedReader(maxReaderFile);
+                maxFreq = (buffer.readLine());
+
+                buffer.close();
+                maxReaderFile.close();
+            }
+            catch(FileNotFoundException e){
+                Log.e("getMaxFrequency: ","FileNotFoundException");
+            }
+            catch(IOException e){
+                Log.e("getMaxFrequency: ","IOException");
+            }
+            return maxFreq;
+        }
+        public String getMinFreq(){
+            String minFreq = "";
+            try{
+                FileReader maxReaderFile = new FileReader(minFreqPathCPU0);
+                BufferedReader buffer = new BufferedReader(maxReaderFile);
+                minFreq = (buffer.readLine());
+
+                buffer.close();
+                maxReaderFile.close();
+            }
+            catch(FileNotFoundException e){
+                Log.e("getMinFrequency: ","FileNotFoundException");
+            }
+            catch(IOException e){
+                Log.e("getMinFrequency: ","IOException");
+            }
+            return minFreq;
+        }
+        public void run(){
+            long start = System.currentTimeMillis();
+            long current = start;
+            while(current-start<time) {
+                try {
+                    java.lang.Process su = Runtime.getRuntime().exec("su");
+                    DataOutputStream os = new DataOutputStream(su.getOutputStream());
+
+                    os.writeBytes("echo " + minFreq + " >> " + minFreqPathCPU0 + "\n");
+                    os.flush();
 
 
+                    os.writeBytes("exit\n");
+                    os.flush();
 
 
+                    os.close();
 
 
+                    su.waitFor();
 
+                    Log.i("getFrequency", getFrequency());
 
+                    current = System.currentTimeMillis();
+                } catch (InterruptedException e) {
+                    Log.i("InterruptedException", "frequencyScaling: ");
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    Log.i("IOException", "frequencyScaling: ");
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

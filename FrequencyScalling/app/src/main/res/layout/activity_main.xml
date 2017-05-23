@@ -49,5 +49,45 @@
         android:layout_alignLeft="@+id/time"
         android:layout_alignStart="@+id/time"/>
 
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/time"
+        android:layout_alignTop="@+id/usageToImpose"
+        android:layout_toLeftOf="@+id/usageToImpose"
+        android:layout_toStartOf="@+id/usageToImpose"
+        android:text="usage:" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/time"
+        android:layout_below="@+id/usageToImpose"
+        android:layout_toLeftOf="@+id/time"
+        android:layout_toStartOf="@+id/time"
+        android:text="time" />
+
+    <EditText
+        android:id="@+id/minFrequency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/usageToImpose"
+        android:layout_alignEnd="@+id/usageToImpose"
+        android:layout_alignRight="@+id/usageToImpose"
+        android:ems="10"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/usageToImpose"
+        android:layout_alignTop="@+id/minFrequency"
+        android:layout_toLeftOf="@+id/minFrequency"
+        android:layout_toStartOf="@+id/minFrequency"
+        android:text="min frequency" />
+
 
 </RelativeLayout>
